@@ -32,4 +32,4 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 )
 
-replace fluid/probes/core => ../core
+replace fluid/probes/core => ./core
