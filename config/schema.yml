@@ -1,0 +1,181 @@
+entities:
+  users:
+    description: "GitLab users"
+    fields:
+      id:
+        type: "integer"
+        description: "Unique user ID"
+        primary: true
+      username:
+        type: "string"
+        description: "Unique username"
+      email:
+        type: "string"
+        format: "email"
+        description: "User email address"
+      name:
+        type: "string"
+        max_length: 255
+        description: "Full name"
+      state:
+        type: "string"
+        enum: ["active", "blocked"]
+        default: "active"
+        description: "Account state"
+      bio:
+        type: "string"
+        description: "User biography"
+      external:
+        type: "boolean"
+        default: false
+        description: "Indicates if user is external"
+      created_at:
+        type: "string"
+        format: "datetime"
+        description: "Account creation date"
+      last_sign_in_at:
+        type: "string"
+        format: "datetime"
+        description: "Last sign in date"
+      confirmed_at:
+        type: "string"
+        format: "datetime"
+        description: "Account confirmation date"
+      groups_names:
+        type: "array"
+        items:
+          type: "string"
+        description: "Names of groups the user belongs to"
+        computed: true
+
+  groups:
+    description: "GitLab groups"
+    fields:
+      id:
+        type: "integer"
+        description: "Unique group ID"
+        primary: true
+      name:
+        type: "string"
+        description: "Group name"
+      path:
+        type: "string"
+        description: "Group path"
+      description:
+        type: "string"
+        description: "Group description"
+      visibility:
+        type: "string"
+        enum: ["private", "internal", "public"]
+        description: "Group visibility"
+      created_at:
+        type: "string"
+        format: "datetime"
+        description: "Group creation date"
+      parent_id:
+        type: "integer"
+        nullable: true
+        description: "Parent group ID"
+
+  projects:
+    description: "GitLab projects"
+    fields:
+      id:
+        type: "integer"
+        description: "Unique project ID"
+        primary: true
+      name:
+        type: "string"
+        description: "Project name"
+      path:
+        type: "string"
+        description: "Project path"
+      description:
+        type: "string"
+        description: "Project description"
+      visibility:
+        type: "string"
+        enum: ["private", "internal", "public"]
+        description: "Project visibility"
+      created_at:
+        type: "string"
+        format: "datetime"
+        description: "Project creation date"
+      namespace:
+        type: "object"
+        description: "Project namespace (group or user)"
+        properties:
+          id:
+            type: "integer"
+            description: "Namespace ID"
+          name:
+            type: "string"
+            description: "Namespace name"
+          path:
+            type: "string"
+            description: "Namespace path"
+          kind:
+            type: "string"
+            description: "Namespace type (group or user)"
+          full_path:
+            type: "string"
+            description: "Full namespace path"
+          parent_id:
+            type: "integer"
+            nullable: true
+            description: "Parent namespace ID"
+      default_branch:
+        type: "string"
+        description: "Default project branch"
+
+  repositories:
+    description: "Cloned Git repositories (synced locally)"
+    fields:
+      url:
+        type: "string"
+        description: "Repository URL (unique)"
+        primary: true
+      branch:
+        type: "string"
+        description: "Tracked branch"
+      path:
+        type: "string"
+        description: "Local directory name"
+      name:
+        type: "string"
+        description: "Repository slug/name"
+      last_sync_at:
+        type: "string"
+        format: "datetime"
+        description: "Last sync timestamp"
+      source_view_base_url:
+        type: "string"
+        description: "Resolved GitLab blob URL prefix for view-source links (file path not included)"
+      rag:
+        type: "object"
+        description: "Path-based RAG rules (glob patterns, facets); configure per repo under data.repositories.repos[].rag in probe.yml"
+
+  code_files:
+    description: "Text files indexed for RAG (scanned from cloned repositories)"
+    fields:
+      id:
+        type: "string"
+        description: "Stable identifier (repository hash + file path)"
+        primary: true
+      repo_url:
+        type: "string"
+        description: "Git repository URL"
+      file_path:
+        type: "string"
+        description: "Path relative to the repository root"
+      content:
+        type: "string"
+        description: "Text content (RAG when fields.content.rag is enabled on the code_files entity)"
+        usable_in_rag: true
+      title:
+        type: "string"
+        description: "Display title (usually the file name)"
+      source_url:
+        type: "string"
+        nullable: true
+        description: "Absolute GitLab blob URL for the file (set by the probe at scan time)"

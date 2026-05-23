@@ -1,0 +1,47 @@
+# GitLab probe — copy to config/probe.yml and set env vars (see env.secrets.example).
+probe:
+  name: "gitlab"
+  version: "0.1.0"
+
+gitlab:
+  url: "https://gitlab.example.com"
+  token: "${GITLAB_TOKEN}"
+  api_version: "v4"
+  installation_type: "saas"
+  group_id: "your-group-path"
+
+data:
+  include_subgroups: true
+  entities:
+    - name: users
+      refresh_interval: "15m"
+    - name: groups
+      refresh_interval: "15m"
+    - name: projects
+      refresh_interval: "15m"
+    - name: repositories
+      refresh_interval: "1h"
+    - name: code_files
+      refresh_interval: "1h"
+      fields:
+        content:
+          rag: true
+  repositories:
+    base_dir: "data/repositories"
+    source_view_base_url: "https://gitlab.example.com/{path}/-/blob/{ref}"
+    repos:
+      - url: "https://gitlab.example.com/group/project"
+        branch: "main"
+        index_files: true
+
+state:
+  dir: "state"
+  format: "yaml"
+  cleanup_interval: 60
+
+controlplane:
+  base_url: "${FLUID_CONTROLPLANE_HTTP_BASE}"
+  api_version: "v1"
+  parameters:
+    organization_uuid: "${FLUID_CONTROLPLANE_ORGANIZATION_UUID}"
+    token: "${FLUID_CONTROLPLANE_TOKEN}"
