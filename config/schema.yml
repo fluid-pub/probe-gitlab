@@ -170,7 +170,7 @@ entities:
         description: "Path relative to the repository root"
       content:
         type: "string"
-        description: "Text content (RAG when fields.content.rag is enabled on the code_files entity)"
+        description: "Raw file text in snapshots (RAG corpus uses rag_for_content when fields.content.rag is enabled)"
         usable_in_rag: true
       title:
         type: "string"
