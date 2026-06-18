@@ -60,9 +60,14 @@ func (e *CodeFilesEntity) Refresh(client core.Client) (interface{}, error) {
 			log.Printf("code_files: scan %s: %v", r.URL, err)
 			continue
 		}
-		if !ragEnabled {
-			for i := range files {
+		for i := range files {
+			if ragEnabled {
+				files[i].RagForContent = files[i].Content
+				// RAG text is sent once as rag_for_content; omit content to keep ingest payload bounded.
 				files[i].Content = ""
+			} else {
+				files[i].Content = ""
+				files[i].RagForContent = ""
 			}
 		}
 		all = append(all, files...)

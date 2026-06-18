@@ -9,6 +9,10 @@ Tag naming: `0.y.z` (no `v` prefix). Align `cmd/version.go` with the tag before 
 
 ## [Unreleased]
 
+### Fixed
+
+- **code_files RAG**: populate `rag_for_content` when `fields.content.rag` is enabled so the control plane indexes GitLab file text (schema `usable_in_rag` expects `rag_for_<field>`); omit raw `content` from ingest to keep payload size bounded.
+
 ## [0.1.0] - 2026-05-23
 
 ### Added
